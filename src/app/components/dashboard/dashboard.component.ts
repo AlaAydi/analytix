@@ -2,43 +2,53 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
+import { trigger, style, animate, transition } from '@angular/animations';
+
 import { ChartComponent } from '../chart/chart.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { HeaderComponent } from '../header/header.component';
+import { KpiGridComponent, KPI } from '../kpi-grid/kpi-grid.component';
+import { TransactionTableComponent, Transaction } from '../transaction-table/transaction-table.component';
+import { AnalyticsViewComponent } from '../analytics-view/analytics-view.component';
+import { ReportsViewComponent } from '../reports-view/reports-view.component';
+import { SettingsViewComponent } from '../settings-view/settings-view.component';
+import { ToastNotificationComponent } from '../toast-notification/toast-notification.component';
+
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
-interface Transaction {
-  id: string;
-  date: Date;
-  customer: string;
-  category: string;
-  amount: number;
-  status: 'Completed' | 'Pending' | 'Cancelled';
-}
-
-interface KPI {
-  title: string;
-  value: string;
-  change: string;
-  isPositive: boolean;
-  iconName: string;
-  color: string;
-  sparkline: number[];
-}
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChartComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ChartComponent,
+    SidebarComponent,
+    HeaderComponent,
+    KpiGridComponent,
+    TransactionTableComponent,
+    AnalyticsViewComponent,
+    ReportsViewComponent,
+    SettingsViewComponent,
+    ToastNotificationComponent
+  ],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
+  animations: [
+    trigger('fadeScaleTab', [
+      transition('* => *', [
+        style({ opacity: 0, transform: 'scale(0.98)' }),
+        animate('250ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'scale(1)' }))
+      ])
+    ])
+  ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // Theme & State
   isDarkMode = true;
   activeTab = 'dashboard';
   dateFilter = '30d';
-  searchText = '';
-  statusFilter = 'all';
 
   // Live Sync State
   isLiveSync = false;
@@ -49,10 +59,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   kpis: KPI[] = [];
   transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = [];
-
-  // Table Pagination
-  currentPage = 1;
-  itemsPerPage = 5;
 
   // Chart Configurations (Overview)
   revenueChartType: ChartConfiguration['type'] = 'line';
@@ -171,7 +177,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFilterChange(): void {
+  onFilterChange(newFilter: string): void {
+    this.dateFilter = newFilter;
     this.initializeData();
     this.applyFilters();
     this.updateChartData();
@@ -457,7 +464,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private initializeData(): void {
     const rangeDays = this.getDaysCount();
     
-    // KPIs
     this.kpis = [
       {
         title: 'Revenus Totaux',
@@ -502,27 +508,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private applyFilters(): void {
-    let result = [...this.transactions];
-
-    if (this.searchText.trim()) {
-      const search = this.searchText.toLowerCase().trim();
-      result = result.filter(t => 
-        t.customer.toLowerCase().includes(search) || 
-        t.category.toLowerCase().includes(search) || 
-        t.id.toLowerCase().includes(search)
-      );
-    }
-
-    if (this.statusFilter !== 'all') {
-      result = result.filter(t => t.status.toLowerCase() === this.statusFilter.toLowerCase());
-    }
-
-    this.filteredTransactions = result;
-    this.currentPage = 1;
-  }
-
-  onSearchOrStatusChange(): void {
-    this.applyFilters();
+    this.filteredTransactions = [...this.transactions];
   }
 
   // --- Real-time Simulation ---
@@ -588,7 +574,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const gridColor = isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(15, 23, 42, 0.07)';
     const textColor = isDark ? '#94a3b8' : '#64748b';
 
-    // Revenue Area Chart
     this.revenueChartData = {
       labels: this.getChartLabels(),
       datasets: [
@@ -644,7 +629,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     };
 
-    // Traffic Doughnut Chart
     this.trafficChartData = {
       labels: ['Recherche Directe', 'Réseaux Sociaux', 'Emailing', 'Référencement'],
       datasets: [{
@@ -672,7 +656,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       cutout: '70%'
     } as any;
 
-    // Growth Bar Chart
     this.growthChartData = {
       labels: this.getChartLabels().slice(-6),
       datasets: [{
@@ -702,7 +685,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     };
 
-    // Analytics detailed line chart
     this.analyticsChartData = {
       labels: this.getChartLabels(),
       datasets: [
@@ -747,7 +729,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     };
 
-    // Device Traffic Doughnut Chart
     this.deviceChartData = {
       labels: ['Ordinateur', 'Mobile', 'Tablette'],
       datasets: [{
@@ -1028,54 +1009,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     return list.sort((a, b) => b.date.getTime() - a.date.getTime());
-  }
-
-  // --- Pagination helpers ---
-  get totalPages(): number {
-    return Math.ceil(this.filteredTransactions.length / this.itemsPerPage);
-  }
-
-  get paginatedTransactions(): Transaction[] {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredTransactions.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  getSparklinePath(points: number[]): string {
-    if (!points || points.length === 0) return '';
-    const min = Math.min(...points);
-    const max = Math.max(...points);
-    const range = max - min === 0 ? 1 : max - min;
-    const width = 120;
-    const height = 40;
-    const stepX = width / (points.length - 1);
-    
-    return points.map((p, i) => {
-      const x = i * stepX;
-      const y = height - ((p - min) / range) * (height - 6) - 3;
-      return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
-    }).join(' ');
-  }
-
-  getKpiColorHex(colorName: string): string {
-    switch (colorName) {
-      case 'indigo': return '#6366f1';
-      case 'emerald': return '#10b981';
-      case 'amber': return '#f59e0b';
-      case 'rose': return '#f43f5e';
-      default: return '#6366f1';
-    }
   }
 
   // --- Analytics Helper Methods ---
