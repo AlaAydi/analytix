@@ -1,0 +1,370 @@
+<div class="dashboard-container" [class.theme-dark]="isDarkMode" [class.theme-light]="!isDarkMode">
+  
+  <!-- Sidebar Panel -->
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+      </svg>
+      <span class="brand-name">Analytix</span>
+    </div>
+
+    <nav class="nav-menu">
+      <button class="nav-item" [class.active]="activeTab === 'dashboard'" (click)="setActiveTab('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="9" rx="1" />
+          <rect x="14" y="3" width="7" height="5" rx="1" />
+          <rect x="14" y="12" width="7" height="9" rx="1" />
+          <rect x="3" y="16" width="7" height="5" rx="1" />
+        </svg>
+        <span>Vue d'ensemble</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activeTab === 'analytics'" (click)="setActiveTab('analytics')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>
+        <span>Analyses</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activeTab === 'reports'" (click)="setActiveTab('reports')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+        <span>Rapports</span>
+      </button>
+
+      <button class="nav-item" [class.active]="activeTab === 'settings'" (click)="setActiveTab('settings')">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        <span>Configuration</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar">AA</div>
+        <div class="user-info">
+          <span class="user-name">Aydi Ala</span>
+          <span class="user-role">Administrateur</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Section -->
+  <main class="main-content" id="dashboard-content">
+    
+    <!-- Top Header -->
+    <header class="dashboard-header">
+      <div class="header-left">
+        <h1 class="page-title">Tableau de bord</h1>
+        <p class="page-subtitle">Dernière mise à jour : {{ lastUpdated | date:'HH:mm:ss' }}</p>
+      </div>
+
+      <div class="header-actions">
+        <!-- Live Sync Toggle -->
+        <div class="sync-switch" [class.active]="isLiveSync" (click)="toggleLiveSync()">
+          <svg class="sync-icon" [class.spinning]="isLiveSync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
+          <span>Temps Réel</span>
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+
+        <!-- Date Range Filter -->
+        <div class="filter-dropdown">
+          <select [(ngModel)]="dateFilter" (change)="onFilterChange()" class="glass-select">
+            <option value="1d">Aujourd'hui</option>
+            <option value="7d">7 derniers jours</option>
+            <option value="30d">30 derniers jours</option>
+            <option value="90d">90 derniers jours</option>
+          </select>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="action-btn theme-toggle" (click)="toggleTheme()" title="Basculer le thème">
+          <svg *ngIf="isDarkMode" class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <line x1="12" y1="1" x2="12" y2="3" />
+            <line x1="12" y1="21" x2="12" y2="23" />
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+            <line x1="1" y1="12" x2="3" y2="12" />
+            <line x1="21" y1="12" x2="23" y2="12" />
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+          </svg>
+          <svg *ngIf="!isDarkMode" class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+
+        <!-- Export PDF -->
+        <button class="btn btn-primary btn-export" (click)="exportPDF()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>Exporter PDF</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Sections based on tabs -->
+    <div class="content-body" *ngIf="activeTab === 'dashboard' || activeTab === 'analytics'">
+      
+      <!-- KPI Cards Grid -->
+      <section class="kpi-grid">
+        <div *ngFor="let kpi of kpis" class="glass-card kpi-card" [ngClass]="kpi.color">
+          <div class="kpi-header">
+            <span class="kpi-title">{{ kpi.title }}</span>
+            <div class="kpi-icon-wrapper">
+              <!-- Inline SVGs representing KPI icons -->
+              <svg *ngIf="kpi.iconName === 'currency-dollar'" class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23" />
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              <svg *ngIf="kpi.iconName === 'users'" class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              <svg *ngIf="kpi.iconName === 'activity'" class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+              <svg *ngIf="kpi.iconName === 'trending-up'" class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                <polyline points="17 6 23 6 23 12" />
+              </svg>
+            </div>
+          </div>
+          
+          <div class="kpi-body">
+            <h2 class="kpi-value">{{ kpi.value }}</h2>
+            <div class="kpi-trend" [class.positive]="kpi.isPositive" [class.negative]="!kpi.isPositive">
+              <svg class="trend-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline *ngIf="kpi.isPositive" points="18 15 12 9 6 15" />
+                <polyline *ngIf="!kpi.isPositive" points="6 9 12 15 18 9" />
+              </svg>
+              <span>{{ kpi.change }}</span>
+              <span class="trend-text">ce mois-ci</span>
+            </div>
+          </div>
+
+          <div class="kpi-sparkline">
+            <svg viewBox="0 0 120 40" class="sparkline-svg">
+              <path [attr.d]="getSparklinePath(kpi.sparkline)" 
+                    fill="none" 
+                    [attr.stroke]="getKpiColorHex(kpi.color)" 
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Charts Section -->
+      <section class="charts-grid">
+        <!-- Main Line Chart -->
+        <div class="glass-card chart-card main-chart-card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Évolution des Revenus & Dépenses</h3>
+              <p class="card-subtitle">Analyse comparative des flux de trésorerie</p>
+            </div>
+          </div>
+          <div class="card-body chart-wrapper">
+            <app-chart [type]="revenueChartType" [data]="revenueChartData" [options]="revenueChartOptions"></app-chart>
+          </div>
+        </div>
+
+        <!-- Sidebar Charts (Doughnut & Bar) -->
+        <div class="secondary-charts">
+          <div class="glass-card chart-card sub-chart-card">
+            <div class="card-header">
+              <h3 class="card-title">Canaux de Trafic</h3>
+            </div>
+            <div class="card-body chart-wrapper doughnut-wrapper">
+              <app-chart [type]="trafficChartType" [data]="trafficChartData" [options]="trafficChartOptions"></app-chart>
+            </div>
+          </div>
+
+          <div class="glass-card chart-card sub-chart-card">
+            <div class="card-header">
+              <h3 class="card-title">Croissance Clients</h3>
+            </div>
+            <div class="card-body chart-wrapper">
+              <app-chart [type]="growthChartType" [data]="growthChartData" [options]="growthChartOptions"></app-chart>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Transaction Table -->
+      <section class="table-section">
+        <div class="glass-card table-card">
+          <div class="table-header">
+            <div>
+              <h3 class="card-title">Transactions Récentes</h3>
+              <p class="card-subtitle">Historique des transactions filtrées par période</p>
+            </div>
+            
+            <div class="table-controls">
+              <!-- Search Input -->
+              <div class="search-box glass-input-wrapper">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <input type="text" [(ngModel)]="searchText" (input)="onSearchOrStatusChange()" placeholder="Rechercher un client..." class="glass-input" />
+              </div>
+
+              <!-- Status Dropdown -->
+              <select [(ngModel)]="statusFilter" (change)="onSearchOrStatusChange()" class="glass-select status-select">
+                <option value="all">Tous les Statuts</option>
+                <option value="completed">Complété</option>
+                <option value="pending">En attente</option>
+                <option value="cancelled">Annulé</option>
+              </select>
+
+              <!-- CSV Export Button -->
+              <button class="btn btn-secondary" (click)="exportCSV()" title="Exporter en CSV">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+                <span>Exporter CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="glass-table">
+              <thead>
+                <tr>
+                  <th>ID Transaction</th>
+                  <th>Date</th>
+                  <th>Client</th>
+                  <th>Catégorie</th>
+                  <th>Montant</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tx of paginatedTransactions">
+                  <td class="tx-id">{{ tx.id }}</td>
+                  <td>{{ tx.date | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="client-name">{{ tx.customer }}</td>
+                  <td><span class="category-badge">{{ tx.category }}</span></td>
+                  <td class="tx-amount">{{ tx.amount | currency:'EUR':'symbol':'1.0-0' }}</td>
+                  <td>
+                    <span class="status-badge" [ngClass]="tx.status.toLowerCase()">
+                      {{ tx.status === 'Completed' ? 'Complété' : tx.status === 'Pending' ? 'En attente' : 'Annulé' }}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngIf="paginatedTransactions.length === 0">
+                  <td colspan="6" class="no-data">Aucune transaction trouvée</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Bar -->
+          <div class="table-pagination" *ngIf="totalPages > 1">
+            <span class="pagination-info">
+              Page {{ currentPage }} sur {{ totalPages }} ({{ filteredTransactions.length }} transactions)
+            </span>
+            <div class="pagination-buttons">
+              <button class="pagination-btn" (click)="prevPage()" [disabled]="currentPage === 1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </button>
+              <button class="pagination-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Reports Section View -->
+    <div class="content-body" *ngIf="activeTab === 'reports'">
+      <div class="glass-card placeholder-card">
+        <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+        <h3>Rapports & Documents</h3>
+        <p>Générez des rapports mensuels consolidés et exportez des états financiers.</p>
+        <div class="placeholder-actions">
+          <button class="btn btn-primary" (click)="exportPDF()">Générer le rapport actuel</button>
+          <button class="btn btn-secondary" (click)="exportCSV()">Télécharger l'historique complet</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Section View -->
+    <div class="content-body" *ngIf="activeTab === 'settings'">
+      <div class="glass-card placeholder-card">
+        <svg class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+        <h3>Paramètres du Dashboard</h3>
+        <p>Gérez les préférences de synchronisation, l'affichage et l'intégration des APIs de données.</p>
+        <div class="settings-form">
+          <div class="form-row">
+            <span class="label-text">Mode Sombre par défaut</span>
+            <div class="sync-switch" [class.active]="isDarkMode" (click)="toggleTheme()">
+              <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="label-text">Intervalle de rafraîchissement (s)</span>
+            <input type="number" value="4" disabled class="settings-input" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Notification Toast -->
+  <div class="toast-notification" [class.show]="showToast">
+    <div class="toast-content">
+      <svg class="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+      <span>{{ toastMessage }}</span>
+    </div>
+  </div>
+
+</div>
