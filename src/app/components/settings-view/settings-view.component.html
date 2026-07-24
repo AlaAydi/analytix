@@ -1,0 +1,199 @@
+<div class="settings-workspace">
+  <!-- Left Side Forms -->
+  <div class="settings-forms-container">
+    <!-- Profile Settings Card -->
+    <div class="glass-card settings-card">
+      <div class="card-header">
+        <h3 class="card-title">Profil Administrateur</h3>
+      </div>
+      <div class="card-body">
+        <div class="settings-form-grid">
+          <div class="form-group-half">
+            <label class="form-label">Nom complet</label>
+            <input type="text" [(ngModel)]="userName" class="settings-text-input" />
+          </div>
+          <div class="form-group-half">
+            <label class="form-label">Adresse Email</label>
+            <input type="email" [(ngModel)]="userEmail" class="settings-text-input" />
+          </div>
+          <div class="form-group-half">
+            <label class="form-label">Rôle d'administration</label>
+            <input type="text" [(ngModel)]="userRole" class="settings-text-input" disabled />
+          </div>
+          <div class="form-group-half flex-align-end">
+            <button class="btn btn-primary full-width" (click)="onSaveProfile()">
+              Sauvegarder le Profil
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences Settings Card -->
+    <div class="glass-card settings-card">
+      <div class="card-header">
+        <h3 class="card-title">Préférences de l'Interface</h3>
+      </div>
+      <div class="card-body">
+        <div class="settings-form-rows">
+          <div class="settings-row-item">
+            <div class="row-info">
+              <span class="row-title">Alertes Sonores</span>
+              <p class="row-desc">Émettre un bip sonore discret lors de la synchronisation d'une transaction</p>
+            </div>
+            <div class="sync-switch" [class.active]="enableSound" (click)="onToggleSound()">
+              <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="row-info">
+              <span class="row-title">Mode Sombre Global</span>
+              <p class="row-desc">Activer le thème graphique sombre par défaut pour l'application</p>
+            </div>
+            <div class="sync-switch" [class.active]="isDarkMode" (click)="onToggleTheme()">
+              <div class="toggle-track">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-row-item">
+            <div class="row-info">
+              <span class="row-title">Intervalle de Rafraîchissement</span>
+              <p class="row-desc">Fréquence de mise à jour des transactions en secondes en mode Temps Réel</p>
+            </div>
+            <div class="refresh-selector">
+              <input type="number" [ngModel]="refreshInterval" (ngModelChange)="onRefreshIntervalChange($event)" min="2" max="30" class="settings-number-input" />
+              <span class="unit">sec</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Credentials Card -->
+    <div class="glass-card settings-card">
+      <div class="card-header">
+        <h3 class="card-title">Intégrations & Passerelles API</h3>
+      </div>
+      <div class="card-body">
+        <div class="api-integrations-list">
+          
+          <!-- Stripe API -->
+          <div class="api-item">
+            <div class="api-meta">
+              <span class="api-badge-icon stripe">S</span>
+              <div class="api-info">
+                <span class="api-name">Stripe Payments API</span>
+                <p class="api-desc">Synchroniser les flux financiers réels</p>
+              </div>
+            </div>
+            <div class="api-actions">
+              <div class="api-input-wrapper">
+                <input [type]="showApiKeys.stripeKey ? 'text' : 'password'" [(ngModel)]="apiKeys.stripeKey" class="settings-text-input key-input" />
+                <button class="key-visibility-btn" (click)="onToggleApiKeyVisibility('stripeKey')">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <button class="btn btn-secondary flex-center" (click)="onTestApiConnection('stripe')" [disabled]="apiTesting.stripe">
+                <span *ngIf="!apiTesting.stripe">Tester</span>
+                <svg *ngIf="apiTesting.stripe" class="btn-icon spinning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="2" x2="12" y2="6" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                </svg>
+              </button>
+              <span class="api-connection-status" [ngClass]="apiStatus.stripe">
+                {{ apiStatus.stripe === 'connected' ? 'Connecté' : 'Déconnecté' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Google Analytics -->
+          <div class="api-item">
+            <div class="api-meta">
+              <span class="api-badge-icon google">G</span>
+              <div class="api-info">
+                <span class="api-name">Google Analytics 4</span>
+                <p class="api-desc">Extraire les sessions et événements d'audience</p>
+              </div>
+            </div>
+            <div class="api-actions">
+              <div class="api-input-wrapper">
+                <input [type]="showApiKeys.googleAnalytics ? 'text' : 'password'" [(ngModel)]="apiKeys.googleAnalytics" class="settings-text-input key-input" />
+                <button class="key-visibility-btn" (click)="onToggleApiKeyVisibility('googleAnalytics')">
+                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <button class="btn btn-secondary flex-center" (click)="onTestApiConnection('google')" [disabled]="apiTesting.google">
+                <span *ngIf="!apiTesting.google">Tester</span>
+                <svg *ngIf="apiTesting.google" class="btn-icon spinning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="2" x2="12" y2="6" />
+                  <line x1="12" y1="18" x2="12" y2="22" />
+                </svg>
+              </button>
+              <span class="api-connection-status" [ngClass]="apiStatus.google">
+                {{ apiStatus.google === 'connected' ? 'Connecté' : 'Déconnecté' }}
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Side Terminal Logs & Actions -->
+  <div class="settings-logs-container">
+    <!-- Terminal Logs Card -->
+    <div class="glass-card terminal-logs-card">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <span class="terminal-title">system-live-logger.sh</span>
+      </div>
+      <div class="terminal-body">
+        <div *ngFor="let log of systemLogs" class="terminal-line">
+          <span class="terminal-prompt">$</span> {{ log }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Database & Clean actions -->
+    <div class="glass-card data-management-card">
+      <div class="card-header">
+        <h3 class="card-title">Gestion des Données de Cache</h3>
+      </div>
+      <div class="card-body data-actions-grid">
+        <button class="btn btn-secondary flex-center" (click)="onPurgeCache()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          </svg>
+          <span>Vider le Cache Local</span>
+        </button>
+        <button class="btn btn-secondary flex-center" (click)="onExportBackup()">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          <span>Sauvegarde JSON</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
