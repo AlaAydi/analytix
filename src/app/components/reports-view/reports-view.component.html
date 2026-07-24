@@ -1,0 +1,209 @@
+<div class="reports-workspace">
+  <!-- Controls Config Panel (Left) -->
+  <div class="glass-card report-builder-config">
+    <h3 class="panel-section-title">Générateur de Rapports</h3>
+    <p class="panel-section-desc">Sélectionnez vos critères pour extraire des documents d'activités certifiés</p>
+    
+    <div class="config-form">
+      <!-- Report Type -->
+      <div class="form-group">
+        <label class="form-label">Modèle de Rapport</label>
+        <select [ngModel]="reportType" (ngModelChange)="onReportTypeChange($event)" class="glass-select full-width">
+          <option value="financial">Performance Financière</option>
+          <option value="traffic">Trafic & Acquisition</option>
+          <option value="conversion">Audit de Conversion</option>
+          <option value="general">Activité Générale</option>
+        </select>
+      </div>
+
+      <!-- Export Format -->
+      <div class="form-group">
+        <label class="form-label">Format du document</label>
+        <div class="radio-selector-group">
+          <label class="radio-label" [class.selected]="reportFormat === 'pdf'">
+            <input type="radio" name="format" value="pdf" [ngModel]="reportFormat" (ngModelChange)="onReportFormatChange($event)" />
+            <span>PDF Document</span>
+          </label>
+          <label class="radio-label" [class.selected]="reportFormat === 'csv'">
+            <input type="radio" name="format" value="csv" [ngModel]="reportFormat" (ngModelChange)="onReportFormatChange($event)" />
+            <span>CSV Classeur</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Report Content Toggle Parameters -->
+      <div class="form-group border-top">
+        <label class="form-label pt-3">Données à inclure</label>
+        <div class="checkbox-list">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="reportOptions.transactions" />
+            <span>Liste des transactions récentes</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="reportOptions.charts" />
+            <span>Inclure les graphiques visuels</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="reportOptions.comparative" />
+            <span>Comparatif vs période passée</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="reportOptions.projections" />
+            <span>Projections de croissance financières</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Generate Action Button -->
+      <div class="form-action">
+        <button class="btn btn-primary full-width font-large pt-3 pb-3" (click)="onGenerateReport()" [disabled]="isGeneratingReport">
+          <svg *ngIf="!isGeneratingReport" class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+          </svg>
+          <span *ngIf="!isGeneratingReport">Générer le rapport</span>
+          
+          <!-- Generating Progress Loader -->
+          <div *ngIf="isGeneratingReport" class="progress-btn-content">
+            <svg class="btn-icon spinning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+              <line x1="2" y1="12" x2="6" y2="12" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+            </svg>
+            <span>Génération : {{ generationProgress }}%</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Realistic Document Preview (Right) -->
+  <div class="glass-card report-document-preview">
+    <div class="preview-header">
+      <span class="badge pulse-badge">Aperçu en temps réel</span>
+      <span class="preview-filename">analytix-export-{{ reportType }}-{{ dateFilter }}.{{ reportFormat }}</span>
+    </div>
+
+    <!-- Document Sheet (Realistic A4 Ratio Styling) -->
+    <div class="document-sheet">
+      <div class="sheet-letterhead">
+        <div class="brand">
+          <svg class="brand-icon-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5"/>
+          </svg>
+          <span>ANALYTIX CORP</span>
+        </div>
+        <div class="sheet-meta">
+          <p class="meta-line"><strong>Éditeur :</strong> {{ userName }}</p>
+          <p class="meta-line"><strong>Date :</strong> {{ lastUpdated | date:'dd/MM/yyyy' }}</p>
+          <p class="meta-line"><strong>Période :</strong> {{ dateFilterLabel }}</p>
+        </div>
+      </div>
+
+      <h2 class="doc-title">Rapport de {{ getReportTypeName(reportType) }}</h2>
+      <div class="doc-divider"></div>
+
+      <div class="doc-body">
+        <h4 class="doc-section-title">Résumé Exécutif</h4>
+        <p class="doc-text" *ngIf="reportType === 'financial'">
+          Les résultats de la période de <strong>{{ dateFilterLabel }}</strong> démontrent une croissance vigoureuse des flux de revenus. 
+          Les revenus s'élèvent à un montant global consolidé, avec un bénéfice net correspondant à un taux de rentabilité de 42%. 
+          Les dépenses opérationnelles restent sous contrôle, conformément aux projections du trimestre.
+        </p>
+        <p class="doc-text" *ngIf="reportType === 'traffic'">
+          L'acquisition de trafic affiche un dynamisme soutenu, particulièrement porté par les canaux de recherche directe et le référencement organique. 
+          Le volume global des sessions a progressé de plus de 12%, avec un ciblage géographique très concentré sur le continent européen.
+        </p>
+        <p class="doc-text" *ngIf="reportType === 'conversion'">
+          L'analyse des entonnoirs d'achat met en évidence des points de friction identifiés lors du passage du panier d'achat à la validation finale de la transaction. 
+          Néanmoins, le taux global de conversion se maintient à un niveau satisfaisant de 3.82%, soutenu par le volume des paniers moyens.
+        </p>
+        <p class="doc-text" *ngIf="reportType === 'general'">
+          Ce bilan récapitule les indicateurs clés de performance d'Analytix. L'ensemble des métriques de trafic, de rentabilité commerciale, et d'activité financière témoignent d'une stabilité opérationnelle positive sur l'ensemble de la période d'analyse.
+        </p>
+
+        <!-- Conditionally Displayed Simulated Chart placeholder -->
+        <div class="doc-visual-box" *ngIf="reportOptions.charts">
+          <span class="visual-label">Visualisation : {{ getReportTypeName(reportType) }} [Graphique Activé]</span>
+          <div class="simulated-doc-chart">
+            <div class="chart-bar-sim" style="height: 40%"></div>
+            <div class="chart-bar-sim" style="height: 65%"></div>
+            <div class="chart-bar-sim" style="height: 55%"></div>
+            <div class="chart-bar-sim" style="height: 85%"></div>
+            <div class="chart-bar-sim" style="height: 70%"></div>
+            <div class="chart-bar-sim" style="height: 95%"></div>
+          </div>
+        </div>
+
+        <!-- Conditionally Displayed Simulated Table -->
+        <div class="doc-table-box" *ngIf="reportOptions.transactions">
+          <h5 class="doc-subtable-title">Extrait des dernières transactions</h5>
+          <div class="simulated-doc-table">
+            <div class="doc-table-row header">
+              <span>ID</span><span>Client</span><span>Montant</span>
+            </div>
+            <div class="doc-table-row">
+              <span>TX-48209</span><span>Société Alpha</span><span>2 450 €</span>
+            </div>
+            <div class="doc-table-row">
+              <span>TX-89201</span><span>Marc Morel</span><span>320 €</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sheet-footer">
+        <span>Document généré et certifié via la console Analytix</span>
+        <span>Page 1 / 1</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- History of Generated Reports -->
+<section class="reports-history-section">
+  <div class="glass-card history-card">
+    <div class="card-header">
+      <h3 class="card-title">Historique des Rapports Extraits</h3>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="glass-table">
+        <thead>
+          <tr>
+            <th>ID Fichier</th>
+            <th>Nom du Rapport</th>
+            <th>Date d'extraction</th>
+            <th>Taille</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rep of generatedReports">
+            <td class="tx-id">{{ rep.id }}</td>
+            <td class="client-name">{{ rep.name }}</td>
+            <td>{{ rep.date | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ rep.size }}</td>
+            <td>
+              <span class="status-badge completed">Disponible</span>
+            </td>
+            <td>
+              <button class="action-btn-mini" (click)="onDownloadReport(rep)" title="Télécharger le rapport">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

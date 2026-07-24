@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.glass-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 30px -10px var(--shadow-color);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  box-shadow: 0 15px 35px -5px var(--shadow-color);
+  transform: translateY(-2px);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.kpi-card {
+  padding: 1.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 140px;
+  box-sizing: border-box;
+}
+
+.kpi-card.indigo { border-left: 4px solid #6366f1; background: linear-gradient(135deg, var(--card-bg) 0%, var(--kpi-indigo-glow) 100%); }
+.kpi-card.emerald { border-left: 4px solid #10b981; background: linear-gradient(135deg, var(--card-bg) 0%, var(--kpi-emerald-glow) 100%); }
+.kpi-card.amber { border-left: 4px solid #f59e0b; background: linear-gradient(135deg, var(--card-bg) 0%, var(--kpi-amber-glow) 100%); }
+.kpi-card.rose { border-left: 4px solid #f43f5e; background: linear-gradient(135deg, var(--card-bg) 0%, var(--kpi-rose-glow) 100%); }
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.kpi-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.kpi-icon-wrapper {
+  color: var(--text-primary);
+  opacity: 0.8;
+}
+
+.kpi-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.kpi-body {
+  margin-top: 0.75rem;
+  z-index: 2;
+}
+
+.kpi-value {
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+.kpi-trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.trend-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.kpi-trend.positive { color: #10b981; }
+.kpi-trend.negative { color: #f43f5e; }
+
+.trend-text {
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.kpi-sparkline {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 120px;
+  height: 40px;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+.sparkline-svg {
+  width: 100%;
+  height: 100%;
+}
