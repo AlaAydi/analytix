@@ -1,27 +1,78 @@
-# AnalyticDashboard
+Analytix 📊
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+Analytix est un tableau de bord d'analyse de données (dashboard) développé avec Angular. Il permet de visualiser des données sous forme de graphiques interactifs et d'exporter les rapports au format PDF.
 
-## Development server
+✨ Fonctionnalités
+📈 Visualisation de données via des graphiques interactifs (basés sur Chart.js)
+🖼️ Capture d'écran des vues du dashboard (via html2canvas)
+📄 Export des rapports/graphiques en PDF (via jsPDF)
+⚡ Application mono-page (SPA) construite avec Angular 18
+🛠️ Stack technique
+Techno	Usage
+Angular 18.2	Framework front-end
+Chart.js	Génération des graphiques
+html2canvas	Capture DOM → image
+jsPDF	Génération de fichiers PDF
+TypeScript / RxJS	Logique applicative
+📋 Prérequis
+Node.js (version LTS recommandée)
+Angular CLI installé globalement :
+bash
+npm install -g @angular/cli
+🚀 Installation
+Cloner le dépôt :
+bash
+git clone https://github.com/AlaAydi/analytix.git
+cd analytix
+Installer les dépendances :
+bash
+npm install
+💻 Démarrage en local
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Lancer le serveur de développement :
 
-## Code scaffolding
+bash
+ng serve
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Puis ouvrir votre navigateur sur http://localhost:4200/. L'application se recharge automatiquement à chaque modification des fichiers sources.
 
-## Build
+🏗️ Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Pour générer une version de production :
 
-## Running unit tests
+bash
+ng build
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Les fichiers compilés seront placés dans le dossier dist/.
 
-## Running end-to-end tests
+🧪 Tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Exécuter les tests unitaires (via Karma) :
 
-## Further help
+bash
+ng test
+📁 Structure du projet
+analytix/
+├── .vscode/          # Configuration de l'éditeur
+├── public/           # Fichiers statiques publics
+├── src/               # Code source de l'application
+│   ├── app/           # Composants, services, modules Angular
+│   └── ...
+├── angular.json       # Configuration Angular CLI
+├── package.json       # Dépendances et scripts npm
+└── tsconfig*.json     # Configuration TypeScript
+🤝 Contribution
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Les contributions sont les bienvenues !
+
+Forkez le projet
+Créez votre branche (git checkout -b feature/ma-fonctionnalite)
+Committez vos changements (git commit -m 'Ajout de ma fonctionnalité')
+Poussez la branche (git push origin feature/ma-fonctionnalite)
+Ouvrez une Pull Request
+📄 Licence
+
+Ce projet n'a pas encore de licence définie. Ajoutez un fichier LICENSE si vous souhaitez en spécifier une (MIT, Apache 2.0, etc.).
+
+👤 Auteur
+AlaAydi – GitHub
