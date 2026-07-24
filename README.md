@@ -1,104 +1,228 @@
 # Analytix 📊
 
-**Analytix** est un tableau de bord d'analyse de données (*dashboard*) développé avec **Angular**. Il permet de visualiser des données sous forme de graphiques interactifs et d'exporter les rapports au format PDF.
+**Analytix** est une application web de visualisation et d'analyse de données développée avec **Angular 18**.  
+Elle permet de créer un tableau de bord interactif (*dashboard*) avec des graphiques dynamiques, d'analyser les données et d'exporter les rapports au format PDF.
+
+---
 
 ## ✨ Fonctionnalités
 
-- 📈 Visualisation de données via des graphiques interactifs (basés sur **Chart.js**)
-- 🖼️ Capture d'écran des vues du dashboard (via **html2canvas**)
-- 📄 Export des rapports/graphiques en **PDF** (via **jsPDF**)
-- ⚡ Application mono-page (SPA) construite avec **Angular 18**
+- 📈 Visualisation des données avec des graphiques interactifs grâce à **Chart.js**
+- 📊 Tableau de bord analytique avec indicateurs clés (KPI)
+- 🖼️ Capture des composants du dashboard via **html2canvas**
+- 📄 Génération et export des rapports en format **PDF** avec **jsPDF**
+- 🔔 Système de notifications utilisateur
+- ⚡ Application **Single Page Application (SPA)** développée avec Angular 18
+- 📱 Interface responsive adaptée aux différents écrans
+
+---
 
 ## 🛠️ Stack technique
 
-| Techno | Usage |
-|---|---|
-| [Angular](https://angular.dev) 18.2 | Framework front-end |
-| [Chart.js](https://www.chartjs.org/) | Génération des graphiques |
-| [html2canvas](https://html2canvas.hertzen.com/) | Capture DOM → image |
-| [jsPDF](https://github.com/parallax/jsPDF) | Génération de fichiers PDF |
-| TypeScript / RxJS | Logique applicative |
+| Technologie | Utilisation |
+|------------|-------------|
+| Angular 18.2 | Framework Front-end |
+| TypeScript | Langage principal |
+| Chart.js | Création des graphiques interactifs |
+| html2canvas | Capture des vues du dashboard |
+| jsPDF | Export des rapports PDF |
+| RxJS | Gestion des flux asynchrones |
+| HTML5 / CSS3 | Structure et design de l'interface |
+
+---
 
 ## 📋 Prérequis
 
-- [Node.js](https://nodejs.org/) (version LTS recommandée)
-- [Angular CLI](https://angular.dev/tools/cli) installé globalement :
+Avant de commencer, assurez-vous d'avoir installé :
 
-\`\`\`bash
+- **Node.js** (version LTS recommandée)
+- **Angular CLI**
+
+Installation d'Angular CLI :
+
+```bash
 npm install -g @angular/cli
-\`\`\`
+```
+
+Vérifier les versions :
+
+```bash
+node -v
+ng version
+```
+
+---
 
 ## 🚀 Installation
 
-1. Cloner le dépôt :
+### 1. Cloner le projet
 
-\`\`\`bash
+```bash
 git clone https://github.com/AlaAydi/analytix.git
+```
+
+Accéder au dossier :
+
+```bash
 cd analytix
-\`\`\`
+```
 
-2. Installer les dépendances :
+### 2. Installer les dépendances
 
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
-## 💻 Démarrage en local
+---
 
-Lancer le serveur de développement :
+## 💻 Lancer l'application en local
 
-\`\`\`bash
+Démarrer le serveur Angular :
+
+```bash
 ng serve
-\`\`\`
+```
 
-Puis ouvrir votre navigateur sur `http://localhost:4200/`. L'application se recharge automatiquement à chaque modification des fichiers sources.
+Puis ouvrir votre navigateur :
 
-## 🏗️ Build
+```
+http://localhost:4200/
+```
 
-Pour générer une version de production :
+L'application se recharge automatiquement après chaque modification du code source.
 
-\`\`\`bash
-ng build
-\`\`\`
+---
 
-Les fichiers compilés seront placés dans le dossier `dist/`.
+## 🏗️ Build de production
+
+Pour générer la version optimisée de production :
+
+```bash
+ng build --configuration production
+```
+
+Les fichiers générés seront disponibles dans :
+
+```
+dist/
+```
+
+---
 
 ## 🧪 Tests
 
-Exécuter les tests unitaires (via [Karma](https://karma-runner.github.io)) :
+Lancer les tests unitaires :
 
-\`\`\`bash
+```bash
 ng test
-\`\`\`
+```
+
+Les tests utilisent :
+
+- **Karma**
+- **Jasmine**
+
+---
 
 ## 📁 Structure du projet
 
-\`\`\`
+```
 analytix/
-├── .vscode/          # Configuration de l'éditeur
-├── public/           # Fichiers statiques publics
-├── src/               # Code source de l'application
-│   ├── app/           # Composants, services, modules Angular
-│   └── ...
-├── angular.json       # Configuration Angular CLI
-├── package.json       # Dépendances et scripts npm
-└── tsconfig*.json     # Configuration TypeScript
-\`\`\`
+│
+├── public/                     # Ressources statiques
+│
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   ├── dashboard/
+│   │   │   ├── kpi-grid/
+│   │   │   ├── reports-view/
+│   │   │   ├── transaction-table/
+│   │   │   └── toast-notification/
+│   │   │
+│   │   ├── services/           # Services Angular
+│   │   └── models/             # Interfaces et modèles TypeScript
+│   │
+│   ├── assets/                 # Images et ressources
+│   └── environments/           # Configuration environnement
+│
+├── angular.json                # Configuration Angular CLI
+├── package.json                # Dépendances npm
+├── tsconfig.json               # Configuration TypeScript
+└── README.md
+```
+
+---
+
+## 🌐 Déploiement
+
+L'application peut être déployée facilement sur :
+
+- **Vercel**
+- **Netlify**
+- **Firebase Hosting**
+
+Exemple avec Vercel :
+
+```bash
+ng build --configuration production
+```
+
+Puis connecter le repository GitHub à Vercel.
+
+---
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues !
+Les contributions sont les bienvenues.
 
-1. Forkez le projet
-2. Créez votre branche (`git checkout -b feature/ma-fonctionnalite`)
-3. Committez vos changements (`git commit -m 'Ajout de ma fonctionnalité'`)
-4. Poussez la branche (`git push origin feature/ma-fonctionnalite`)
-5. Ouvrez une Pull Request
+Étapes :
+
+1. Forker le projet
+2. Créer une nouvelle branche :
+
+```bash
+git checkout -b feature/nouvelle-fonctionnalite
+```
+
+3. Ajouter vos modifications :
+
+```bash
+git add .
+```
+
+4. Créer un commit :
+
+```bash
+git commit -m "Ajout d'une nouvelle fonctionnalité"
+```
+
+5. Envoyer les changements :
+
+```bash
+git push origin feature/nouvelle-fonctionnalite
+```
+
+6. Créer une Pull Request.
+
+---
 
 ## 📄 Licence
 
-Ce projet n'a pas encore de licence définie. Ajoutez un fichier `LICENSE` si vous souhaitez en spécifier une (MIT, Apache 2.0, etc.).
+Ce projet est actuellement sans licence.
+
+Vous pouvez ajouter une licence comme :
+
+- MIT
+- Apache 2.0
+
+selon vos besoins.
+
+---
 
 ## 👤 Auteur
 
-- **AlaAydi** – [GitHub](https://github.com/AlaAydi)
+**Ala Aydi**
+
+🔗 GitHub :  
+https://github.com/AlaAydi
