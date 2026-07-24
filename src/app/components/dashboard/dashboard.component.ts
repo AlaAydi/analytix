@@ -143,7 +143,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.initializeData();
     this.setupCharts();
     this.applyFilters();
-    // Ensure body matches default theme color
     document.body.style.backgroundColor = this.isDarkMode ? '#090d16' : '#f8fafc';
   }
 
@@ -165,7 +164,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.addLog(`Navigation vers l'onglet : ${tabName.toUpperCase()}`);
     this.showNotification(`Onglet : ${tabName.toUpperCase()}`);
     
-    // Slight delay to allow DOM render before updating charts if needed
     if (tabName === 'analytics') {
       setTimeout(() => {
         this.updateAnalyticsChartData();
@@ -174,7 +172,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   onFilterChange(): void {
-    this.initializeData(); // Reload raw data to match filter range
+    this.initializeData();
     this.applyFilters();
     this.updateChartData();
     if (this.activeTab === 'analytics') {
@@ -206,12 +204,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const gain = ctx.createGain();
       
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, ctx.currentTime); // Note A5 (clean high pitch beep)
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
       osc.connect(gain);
       
       gain.connect(ctx.destination);
       gain.gain.setValueAtTime(0.04, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15); // fade out
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
       
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
@@ -227,13 +225,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const element = document.getElementById('dashboard-content');
     if (!element) return;
 
-    // Temporarily hide elements not meant for PDF
     const actions = document.querySelector('.header-actions') as HTMLElement;
     const sidebar = document.querySelector('.sidebar') as HTMLElement;
     if (actions) actions.style.display = 'none';
     if (sidebar) sidebar.style.display = 'none';
 
-    // Set light or dark appropriate capture style
     const mainContent = document.querySelector('.main-content') as HTMLElement;
     const originalPadding = mainContent ? mainContent.style.padding : '';
     if (mainContent) mainContent.style.padding = '0';
@@ -245,8 +241,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210; // A4 size width
-      const pageHeight = 295; // A4 size height
+      const imgWidth = 210;
+      const pageHeight = 295;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       let heightLeft = imgHeight;
       let position = 0;
@@ -263,7 +259,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       pdf.save(`rapport-dashboard-${this.dateFilter}-${new Date().toISOString().slice(0,10)}.pdf`);
       
-      // Restore styles
       if (actions) actions.style.display = '';
       if (sidebar) sidebar.style.display = '';
       if (mainContent) mainContent.style.padding = originalPadding;
@@ -316,7 +311,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.isGeneratingReport = false;
           
-          // Add to generated list
           const typeLabel = this.getReportTypeName(this.reportType);
           const newRep = {
             id: 'REP-' + Math.floor(100 + Math.random() * 900),
@@ -331,7 +325,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.showNotification('Rapport généré avec succès !');
           this.playNotificationSound();
 
-          // Trigger actual download based on settings
           if (this.reportFormat === 'pdf') {
             this.exportPDF();
           } else {
@@ -427,6 +420,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.addLog(`Métriques d'analyses changées pour : ${this.getAnalyticsChartLabel()}`);
   }
 
+  updateAnalyticsChartData(): void {
+    const dataPoints = this.getAnalyticsChartDataPoints();
+    const label = this.getAnalyticsChartLabel();
+    let borderC = '#10b981';
+    let bgC = 'rgba(16, 185, 129, 0.08)';
+    
+    if (this.activeAnalyticsMetric === 'conversions') {
+      borderC = '#6366f1';
+      bgC = 'rgba(99, 102, 241, 0.08)';
+    } else if (this.activeAnalyticsMetric === 'bounce') {
+      borderC = '#f43f5e';
+      bgC = 'rgba(244, 63, 94, 0.08)';
+    } else if (this.activeAnalyticsMetric === 'value') {
+      borderC = '#f59e0b';
+      bgC = 'rgba(245, 158, 11, 0.08)';
+    }
+
+    if (this.analyticsChartData && this.analyticsChartData.datasets && this.analyticsChartData.datasets[0]) {
+      this.analyticsChartData = {
+        ...this.analyticsChartData,
+        labels: this.getChartLabels(),
+        datasets: [{
+          ...this.analyticsChartData.datasets[0],
+          label: label,
+          data: dataPoints,
+          borderColor: borderC,
+          backgroundColor: bgC,
+          pointBackgroundColor: borderC
+        } as any]
+      };
+    }
+  }
+
   // --- Data Initialization ---
   private initializeData(): void {
     const rangeDays = this.getDaysCount();
@@ -471,7 +497,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     ];
 
-    // Transactions list
     this.transactions = this.generateMockTransactions(rangeDays);
     this.lastUpdated = new Date();
   }
@@ -479,7 +504,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private applyFilters(): void {
     let result = [...this.transactions];
 
-    // Search filter
     if (this.searchText.trim()) {
       const search = this.searchText.toLowerCase().trim();
       result = result.filter(t => 
@@ -489,7 +513,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Status filter
     if (this.statusFilter !== 'all') {
       result = result.filter(t => t.status.toLowerCase() === this.statusFilter.toLowerCase());
     }
@@ -505,9 +528,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // --- Real-time Simulation ---
   private startLiveSync(): void {
     this.liveSyncInterval = setInterval(() => {
-      // Small random changes to values
       this.kpis.forEach(kpi => {
-        const percentChange = (Math.random() - 0.45) * 2; // Bias slightly positive
+        const percentChange = (Math.random() - 0.45) * 2;
         let numericVal = parseFloat(kpi.value.replace(/[^0-9.,]/g, '').replace(',', '.'));
         
         if (kpi.iconName === 'currency-dollar') {
@@ -524,13 +546,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
           kpi.value = this.formatCurrency(numericVal);
         }
 
-        // Rotate sparkline
         kpi.sparkline = [...kpi.sparkline.slice(1), numericVal * 0.05 + Math.random() * 5];
         kpi.change = (percentChange >= 0 ? '+' : '') + percentChange.toFixed(1) + '%';
         kpi.isPositive = percentChange >= 0;
       });
 
-      // Add a new random transaction
       const categories = ['Logiciels', 'Consulting', 'Matériel', 'Abonnements'];
       const customers = ['Société Alpha', 'Ecorp', 'Julie Dubois', 'Marc Morel', 'Startup Hub', 'Global Tech'];
       const statusOptions: Transaction['status'][] = ['Completed', 'Pending', 'Cancelled'];
@@ -551,7 +571,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.playNotificationSound();
       this.addLog(`Nouvelle transaction synchronisée : ${newTx.id} - ${newTx.customer} (${this.formatCurrency(newTx.amount)})`);
 
-      // Update charts slightly
       this.updateChartDataRealTime();
     }, this.refreshInterval * 1000);
   }
@@ -631,10 +650,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       datasets: [{
         data: [42, 25, 18, 15],
         backgroundColor: [
-          '#6366f1', // Indigo
-          '#10b981', // Emerald
-          '#f59e0b', // Amber
-          '#f43f5e'  // Rose
+          '#6366f1',
+          '#10b981',
+          '#f59e0b',
+          '#f43f5e'
         ],
         borderWidth: isDark ? 2 : 1,
         borderColor: isDark ? '#1e293b' : '#ffffff'
@@ -734,9 +753,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       datasets: [{
         data: [55, 38, 7],
         backgroundColor: [
-          '#6366f1', // Indigo
-          '#10b981', // Emerald
-          '#f59e0b'  // Amber
+          '#6366f1',
+          '#10b981',
+          '#f59e0b'
         ],
         borderWidth: isDark ? 2 : 1,
         borderColor: isDark ? '#1e293b' : '#ffffff'
@@ -761,7 +780,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const gridColor = isDark ? 'rgba(255, 255, 255, 0.07)' : 'rgba(15, 23, 42, 0.07)';
     const textColor = isDark ? '#94a3b8' : '#64748b';
 
-    // Clone options and update grid/text colors
     if (this.revenueChartOptions && this.revenueChartOptions.scales) {
       this.revenueChartOptions = {
         ...this.revenueChartOptions,
@@ -882,7 +900,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private updateChartDataRealTime(): void {
-    // Add real time nudge to line chart & bar chart
     if (this.revenueChartData.datasets && this.revenueChartData.datasets[0].data) {
       const dataCopy = [...this.revenueChartData.datasets[0].data];
       const change = (Math.random() - 0.45) * 50;
@@ -924,7 +941,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getFilterLabel(): string {
+  public getFilterLabel(): string {
     switch (this.dateFilter) {
       case '1d': return 'Aujourd\'hui';
       case '7d': return '7 Derniers Jours';
@@ -1010,7 +1027,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Sort by date desc
     return list.sort((a, b) => b.date.getTime() - a.date.getTime());
   }
 
@@ -1092,7 +1108,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       else if (range === 7) baseData = [45, 43, 44, 41, 40, 38, 36];
       else if (range === 30) baseData = [45, 42, 43, 38];
       else baseData = [46, 43, 38];
-    } else { // value
+    } else {
       if (range === 1) baseData = [58, 62, 60, 65, 68, 74, 71];
       else if (range === 7) baseData = [64, 68, 66, 72, 70, 78, 84];
       else if (range === 30) baseData = [65, 71, 68, 84];
