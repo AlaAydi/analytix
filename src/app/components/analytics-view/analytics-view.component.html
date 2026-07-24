@@ -1,0 +1,140 @@
+<div class="analytics-container">
+  <!-- Dynamic Metric Selector Cards -->
+  <section class="metrics-selector-grid">
+    <div class="glass-card selector-card" [class.active]="activeAnalyticsMetric === 'sessions'" (click)="setMetric('sessions')">
+      <div class="selector-card-header">
+        <span>Trafic Général</span>
+        <span class="badge emerald">Visites</span>
+      </div>
+      <div class="selector-card-body">
+        <h3>45,2 K</h3>
+        <span class="trend positive">+12.4%</span>
+      </div>
+    </div>
+
+    <div class="glass-card selector-card" [class.active]="activeAnalyticsMetric === 'conversions'" (click)="setMetric('conversions')">
+      <div class="selector-card-header">
+        <span>Taux Conversion</span>
+        <span class="badge indigo">Objectifs</span>
+      </div>
+      <div class="selector-card-body">
+        <h3>3.82%</h3>
+        <span class="trend positive">+2.1%</span>
+      </div>
+    </div>
+
+    <div class="glass-card selector-card" [class.active]="activeAnalyticsMetric === 'bounce'" (click)="setMetric('bounce')">
+      <div class="selector-card-header">
+        <span>Taux de Rebond</span>
+        <span class="badge rose">Sorties</span>
+      </div>
+      <div class="selector-card-body">
+        <h3>41.5%</h3>
+        <span class="trend negative">-4.3%</span>
+      </div>
+    </div>
+
+    <div class="glass-card selector-card" [class.active]="activeAnalyticsMetric === 'value'" (click)="setMetric('value')">
+      <div class="selector-card-header">
+        <span>Panier Moyen</span>
+        <span class="badge amber">Ventes</span>
+      </div>
+      <div class="selector-card-body">
+        <h3>74.50 €</h3>
+        <span class="trend positive">+8.7%</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Analytics Main Interactive Graph & Device Info -->
+  <section class="analytics-details-grid">
+    <!-- Interactive Curve Chart -->
+    <div class="glass-card chart-card main-analytics-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Analyse Temporelle : {{ getAnalyticsChartLabel() }}</h3>
+          <p class="card-subtitle">Visualisation filtrée par période de temps globale</p>
+        </div>
+      </div>
+      <div class="card-body chart-wrapper">
+        <app-chart [type]="analyticsChartType" [data]="analyticsChartData" [options]="analyticsChartOptions"></app-chart>
+      </div>
+    </div>
+
+    <!-- Geographic and Device Side Panel -->
+    <div class="analytics-side-panel">
+      <!-- Device Breakdown -->
+      <div class="glass-card chart-card device-breakdown-card">
+        <div class="card-header">
+          <h3 class="card-title">Part par Appareils</h3>
+        </div>
+        <div class="card-body chart-wrapper device-doughnut-wrapper">
+          <app-chart [type]="deviceChartType" [data]="deviceChartData" [options]="deviceChartOptions"></app-chart>
+        </div>
+      </div>
+
+      <!-- Countries list -->
+      <div class="glass-card countries-card">
+        <div class="card-header">
+          <h3 class="card-title">Trafic Géographique</h3>
+        </div>
+        <div class="countries-list">
+          <div *ngFor="let country of countries" class="country-row">
+            <div class="country-meta">
+              <span class="flag">{{ country.flag }}</span>
+              <span class="country-name">{{ country.name }}</span>
+            </div>
+            <div class="country-progress-wrapper">
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" [style.width.%]="country.percentage"></div>
+              </div>
+              <span class="country-val">{{ country.visits }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Conversion Funnel Section -->
+  <section class="funnel-section">
+    <div class="glass-card funnel-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title">Entonnoir de Conversion Commercial</h3>
+          <p class="card-subtitle">Performance des étapes d'achat du parcours client</p>
+        </div>
+      </div>
+      <div class="funnel-container">
+        <div class="funnel-stage stage-1">
+          <div class="funnel-labels">
+            <span class="stage-title">1. Impressions publicitaires</span>
+            <span class="stage-val">120 000 affichages</span>
+          </div>
+          <div class="funnel-bar"><span class="pct">100%</span></div>
+        </div>
+        <div class="funnel-stage stage-2">
+          <div class="funnel-labels">
+            <span class="stage-title">2. Visites sur la plateforme</span>
+            <span class="stage-val">45 200 sessions</span>
+          </div>
+          <div class="funnel-bar" style="width: 75%;"><span class="pct">37.6%</span></div>
+        </div>
+        <div class="funnel-stage stage-3">
+          <div class="funnel-labels">
+            <span class="stage-title">3. Ajouts au panier d'achat</span>
+            <span class="stage-val">9 490 produits</span>
+          </div>
+          <div class="funnel-bar" style="width: 45%;"><span class="pct">7.9%</span></div>
+        </div>
+        <div class="funnel-stage stage-4">
+          <div class="funnel-labels">
+            <span class="stage-title">4. Transactions confirmées</span>
+            <span class="stage-val">1 726 ventes</span>
+          </div>
+          <div class="funnel-bar" style="width: 20%;"><span class="pct">1.43%</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
