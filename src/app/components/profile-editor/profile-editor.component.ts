@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 export interface ProfileUpdate {
   name: string;
   email: string;
-  role: string;
+  role: 'Administrateur' | 'Client';
   company: string;
   location: string;
   bio: string;
@@ -22,7 +22,7 @@ export interface ProfileUpdate {
 export class ProfileEditorComponent {
   @Input() userName = 'Aydi Ala';
   @Input() userEmail = 'aydi.ala@example.com';
-  @Input() userRole = 'Administrateur';
+  @Input() userRole: 'Administrateur' | 'Client' = 'Administrateur';
   @Input() userCompany = 'Analytix Studio';
   @Input() userLocation = 'Remote';
   @Input() userBio = 'Pilotage produit, reporting et expérience data pour les équipes modernes.';
