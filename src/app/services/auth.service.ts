@@ -4,6 +4,10 @@ export interface AuthUser {
   name: string;
   email: string;
   role: string;
+  company?: string;
+  location?: string;
+  bio?: string;
+  timezone?: string;
 }
 
 interface StoredCredentials {
@@ -11,6 +15,10 @@ interface StoredCredentials {
   email: string;
   password: string;
   role: string;
+  company?: string;
+  location?: string;
+  bio?: string;
+  timezone?: string;
 }
 
 @Injectable({
@@ -75,6 +83,41 @@ export class AuthService {
     localStorage.removeItem(this.sessionKey);
   }
 
+  updateProfile(profile: Partial<AuthUser>): AuthUser | null {
+    const sessionUser = this.currentUser;
+    if (!sessionUser) {
+      return null;
+    }
+
+    const updatedUser: AuthUser = {
+      ...sessionUser,
+      ...profile,
+      name: profile.name?.trim() || sessionUser.name,
+      email: profile.email?.trim().toLowerCase() || sessionUser.email,
+      role: profile.role?.trim() || sessionUser.role
+    };
+
+    localStorage.setItem(this.sessionKey, JSON.stringify(updatedUser));
+
+    const storedUser = this.getStoredUser();
+    if (storedUser) {
+      const nextStoredUser: StoredCredentials = {
+        ...storedUser,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        company: updatedUser.company,
+        location: updatedUser.location,
+        bio: updatedUser.bio,
+        timezone: updatedUser.timezone
+      };
+
+      localStorage.setItem(this.userKey, JSON.stringify(nextStoredUser));
+    }
+
+    return updatedUser;
+  }
+
   private getStoredUser(): StoredCredentials | null {
     const stored = localStorage.getItem(this.userKey);
     if (!stored) {
@@ -92,7 +135,11 @@ export class AuthService {
     const authUser: AuthUser = {
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      company: user.company,
+      location: user.location,
+      bio: user.bio,
+      timezone: user.timezone
     };
 
     localStorage.setItem(this.sessionKey, JSON.stringify(authUser));
