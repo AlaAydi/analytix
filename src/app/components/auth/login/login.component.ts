@@ -14,6 +14,7 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginComponent {
   email = 'demo@analytix.app';
   password = 'Analytix123!';
+  role: 'Administrateur' | 'Client' = 'Administrateur';
   rememberMe = true;
   isSubmitting = false;
   errorMessage = '';
@@ -28,11 +29,11 @@ export class LoginComponent {
     this.isSubmitting = true;
 
     setTimeout(() => {
-      const user = this.authService.login(this.email, this.password);
+      const user = this.authService.login(this.email, this.password, this.role);
 
       if (!user) {
         this.isSubmitting = false;
-        this.errorMessage = 'Identifiants invalides. Essayez le compte demo ou créez un nouveau profil.';
+        this.errorMessage = 'Identifiants invalides ou rôle incorrect. Essayez à nouveau.';
         return;
       }
 

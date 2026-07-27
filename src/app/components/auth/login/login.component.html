@@ -55,6 +55,22 @@
           required>
       </label>
 
+      <div class="role-picker">
+        <span class="role-label">Type de compte</span>
+        <div class="role-options">
+          <label class="role-card" [class.active]="role === 'Administrateur'">
+            <input type="radio" name="role" [(ngModel)]="role" value="Administrateur">
+            <strong>Admin</strong>
+            <span>Accès complet aux modules</span>
+          </label>
+          <label class="role-card" [class.active]="role === 'Client'">
+            <input type="radio" name="role" [(ngModel)]="role" value="Client">
+            <strong>Client</strong>
+            <span>Vue simplifiée et orientée usage</span>
+          </label>
+        </div>
+      </div>
+
       <div class="form-row">
         <label class="checkbox">
           <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
@@ -74,6 +90,7 @@
       <span>Compte demo</span>
       <strong>demo&#64;analytix.app</strong>
       <strong>Analytix123!</strong>
+      <strong>Rôle: Administrateur</strong>
     </div>
   </section>
 </div>
