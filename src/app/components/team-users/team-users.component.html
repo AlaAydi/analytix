@@ -1,0 +1,36 @@
+<section class="module-shell">
+  <div class="glass-card module-hero">
+    <div>
+      <p class="eyebrow">Accès</p>
+      <h2>Gestion des utilisateurs et rôles</h2>
+      <p class="subtitle">Gérez les accès, le statut et les rôles des membres de l'équipe.</p>
+    </div>
+
+    <select [(ngModel)]="roleFilter">
+      <option *ngFor="let role of roles" [value]="role">{{ role === 'all' ? 'Tous les rôles' : role }}</option>
+    </select>
+  </div>
+
+  <div class="glass-card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Membre</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of filteredMembers">
+          <td>{{ member.name }}</td>
+          <td>{{ member.email }}</td>
+          <td>{{ member.role }}</td>
+          <td><span class="status-pill" [attr.data-status]="member.status">{{ member.status }}</span></td>
+          <td><button type="button" class="secondary-btn" (click)="toggleStatus(member)">Basculer</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
