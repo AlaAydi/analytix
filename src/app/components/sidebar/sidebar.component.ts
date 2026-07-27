@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +26,17 @@ export class SidebarComponent {
 
   @Output() tabChange = new EventEmitter<string>();
 
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
+
   selectTab(tab: string): void {
     this.tabChange.emit(tab);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

@@ -1,0 +1,86 @@
+<div class="auth-shell">
+  <section class="auth-hero">
+    <div class="brand-row">
+      <div class="brand-mark">A</div>
+      <div>
+        <p class="eyebrow">Analytix Dashboard</p>
+        <h1>Créez un espace de pilotage prêt pour vos métriques et vos clients.</h1>
+      </div>
+    </div>
+
+    <p class="hero-copy">
+      Enregistrez vos utilisateurs, structurez vos accès, et démarrez avec une base solide pour un vrai dashboard de production.
+    </p>
+
+    <div class="checklist">
+      <article>Auth locale simple pour les démos et prototypes</article>
+      <article>Dashboard multi-vues avec analytics, rapports et paramètres</article>
+      <article>Design moderne, clair, responsive et prêt à personnaliser</article>
+    </div>
+  </section>
+
+  <section class="auth-card">
+    <div class="card-header">
+      <h2>Inscription</h2>
+      <p>Créez votre compte en quelques secondes</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <label>
+        <span>Nom complet</span>
+        <input
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          placeholder="Aydi Ala"
+          required>
+      </label>
+
+      <label>
+        <span>Email professionnel</span>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="you@company.com"
+          required>
+      </label>
+
+      <label>
+        <span>Mot de passe</span>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Minimum 8 caractères"
+          required>
+      </label>
+
+      <label>
+        <span>Confirmer le mot de passe</span>
+        <input
+          type="password"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          placeholder="Répétez le mot de passe"
+          required>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" name="acceptTerms" [(ngModel)]="acceptTerms">
+        <span>J'accepte les conditions d'utilisation</span>
+      </label>
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="isSubmitting || registerForm.invalid">
+        {{ isSubmitting ? 'Création...' : 'Créer le compte' }}
+      </button>
+    </form>
+
+    <div class="footer-link">
+      <span>Vous avez déjà un compte ?</span>
+      <a routerLink="/login">Se connecter</a>
+    </div>
+  </section>
+</div>

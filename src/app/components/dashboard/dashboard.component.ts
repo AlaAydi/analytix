@@ -13,6 +13,7 @@ import { AnalyticsViewComponent } from '../analytics-view/analytics-view.compone
 import { ReportsViewComponent } from '../reports-view/reports-view.component';
 import { SettingsViewComponent } from '../settings-view/settings-view.component';
 import { ToastNotificationComponent } from '../toast-notification/toast-notification.component';
+import { AuthService } from '../../services/auth.service';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -145,7 +146,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
   toastMessage = '';
   showToast = false;
 
+  constructor(private readonly authService: AuthService) {}
+
   ngOnInit(): void {
+    const currentUser = this.authService.currentUser;
+    if (currentUser) {
+      this.userName = currentUser.name;
+      this.userRole = currentUser.role;
+      this.userEmail = currentUser.email;
+    }
+
     this.initializeData();
     this.setupCharts();
     this.applyFilters();

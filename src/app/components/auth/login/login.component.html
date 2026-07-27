@@ -1,0 +1,79 @@
+<div class="auth-shell">
+  <section class="auth-hero">
+    <div class="brand-row">
+      <div class="brand-mark">A</div>
+      <div>
+        <p class="eyebrow">Analytix Dashboard</p>
+        <h1>Connectez votre équipe à une vue claire, rapide et exploitable.</h1>
+      </div>
+    </div>
+
+    <p class="hero-copy">
+      Un espace de pilotage complet avec métriques, rapports, configuration, authentification et une base propre pour votre prochain projet.
+    </p>
+
+    <div class="stats-grid">
+      <article>
+        <strong>+128%</strong>
+        <span>activité pilotée</span>
+      </article>
+      <article>
+        <strong>4 modules</strong>
+        <span>dashboard, analytics, reports, settings</span>
+      </article>
+      <article>
+        <strong>24/7</strong>
+        <span>suivi en temps réel</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="auth-card">
+    <div class="card-header">
+      <h2>Connexion</h2>
+      <p>Accédez à votre espace d’analyse</p>
+    </div>
+
+    <form class="auth-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <label>
+        <span>Email</span>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="demo@analytix.app"
+          required>
+      </label>
+
+      <label>
+        <span>Mot de passe</span>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Analytix123!"
+          required>
+      </label>
+
+      <div class="form-row">
+        <label class="checkbox">
+          <input type="checkbox" name="rememberMe" [(ngModel)]="rememberMe">
+          <span>Rester connecté</span>
+        </label>
+        <a routerLink="/register">Créer un compte</a>
+      </div>
+
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <button class="primary-btn" type="submit" [disabled]="isSubmitting || loginForm.invalid">
+        {{ isSubmitting ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </form>
+
+    <div class="demo-box">
+      <span>Compte demo</span>
+      <strong>demo&#64;analytix.app</strong>
+      <strong>Analytix123!</strong>
+    </div>
+  </section>
+</div>

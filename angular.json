@@ -59,6 +59,13 @@
               "src/styles.css"
             ],
             "scripts": [],
+              "allowedCommonJsDependencies": [
+    "html2canvas",
+    "canvg",
+    "core-js",
+    "rgbcolor",
+    "raf"
+  ],
             "optimization": {
               "fonts": {
                 "inline": false
