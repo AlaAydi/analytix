@@ -40,6 +40,40 @@
         </app-profile-editor>
       </ng-container>
 
+      <!-- CLIENT HOME TAB -->
+      <ng-container *ngIf="!isAdmin && activeTab === 'dashboard'">
+        <div class="glass-card" style="padding: 1.5rem;">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Bienvenue, {{ userName }}</h3>
+              <p class="card-subtitle">Vue client simplifiée pour suivre l'activité et les rapports.</p>
+            </div>
+          </div>
+
+          <section class="charts-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="glass-card chart-card main-chart-card">
+              <div class="card-header">
+                <h3 class="card-title">Mes indicateurs</h3>
+              </div>
+              <div class="card-body chart-wrapper">
+                <app-chart [type]="revenueChartType" [data]="revenueChartData" [options]="revenueChartOptions"></app-chart>
+              </div>
+            </div>
+
+            <div class="glass-card chart-card sub-chart-card">
+              <div class="card-header">
+                <h3 class="card-title">Activité récente</h3>
+              </div>
+              <div class="card-body" style="display:grid; gap:0.8rem;">
+                <div *ngFor="let log of systemLogs.slice(0, 5)" class="glass-card" style="padding:0.8rem 1rem;">
+                  {{ log }}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </ng-container>
+
       <!-- PRODUCTS TAB -->
       <ng-container *ngIf="activeTab === 'products'">
         <app-product-management></app-product-management>

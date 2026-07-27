@@ -65,6 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isDarkMode = true;
   activeTab = 'dashboard';
   dateFilter = '30d';
+  isAdmin = true;
 
   // Live Sync State
   isLiveSync = false;
@@ -125,7 +126,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   // Settings / Profile / API Configuration
   userName = 'Aydi Ala';
-  userRole = 'Administrateur';
+  userRole: 'Administrateur' | 'Client' = 'Administrateur';
   userEmail = 'aydi.ala@example.com';
   userCompany = 'Analytix Studio';
   userLocation = 'Remote';
@@ -193,6 +194,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       this.userName = name;
       this.userRole = role;
+      this.isAdmin = role === 'Administrateur';
       this.userEmail = email;
       this.userCompany = company ?? this.userCompany;
       this.userLocation = location ?? this.userLocation;
