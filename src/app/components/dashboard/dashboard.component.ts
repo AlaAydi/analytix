@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ChartComponent } from '../chart/chart.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -167,7 +167,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly route: ActivatedRoute
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -178,7 +179,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
 
-    const currentUser = this.authService.currentUser;
+    const { currentUser } = this.authService;
     if (currentUser) {
       const {
         name,
@@ -220,6 +221,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   setActiveTab(tabName: string): void {
     this.activeTab = tabName;
+    this.router.navigate(tabName === 'dashboard' ? ['/dashboard'] : ['/dashboard', tabName]);
     this.addLog(`Navigation vers l'onglet : ${tabName.toUpperCase()}`);
     this.showNotification(`Onglet : ${tabName.toUpperCase()}`);
 
@@ -1126,15 +1128,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       else if (range === 30) baseData = [3.1, 3.4, 3.2, 3.8];
       else baseData = [3.0, 3.3, 3.8];
     } else if (this.activeAnalyticsMetric === 'bounce') {
-      if (range === 1) {
-        baseData = [48, 46, 45, 43, 40, 38, 41];
-      } else if (range === 7) {
-        baseData = [45, 43, 44, 41, 40, 38, 36];
-      } else if (range === 30) {
-        baseData = [45, 42, 43, 38];
-      } else {
-        baseData = [46, 43, 38];
-      }
+      if (range === 1) baseData = [48, 46, 45, 43, 40, 38, 41];
+      else if (range === 7) baseData = [45, 43, 44, 41, 40, 38, 36];
+      else if (range === 30) baseData = [45, 42, 43, 38];
+      else baseData = [46, 43, 38];
     } else {
       if (range === 1) baseData = [58, 62, 60, 65, 68, 74, 71];
       else if (range === 7) baseData = [64, 68, 66, 72, 70, 78, 84];
