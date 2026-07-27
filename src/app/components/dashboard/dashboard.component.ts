@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
 import { trigger, style, animate, transition } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
 
 import { ChartComponent } from '../chart/chart.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -13,6 +14,8 @@ import { AnalyticsViewComponent } from '../analytics-view/analytics-view.compone
 import { ReportsViewComponent } from '../reports-view/reports-view.component';
 import { SettingsViewComponent } from '../settings-view/settings-view.component';
 import { ToastNotificationComponent } from '../toast-notification/toast-notification.component';
+import { ProfileEditorComponent, ProfileUpdate } from '../profile-editor/profile-editor.component';
+import { QuickActionsComponent, QuickActionId } from '../quick-actions/quick-actions.component';
 import { AuthService } from '../../services/auth.service';
 
 import jsPDF from 'jspdf';
@@ -32,6 +35,8 @@ import html2canvas from 'html2canvas';
     AnalyticsViewComponent,
     ReportsViewComponent,
     SettingsViewComponent,
+    ProfileEditorComponent,
+    QuickActionsComponent,
     ToastNotificationComponent
   ],
   templateUrl: './dashboard.component.html',
@@ -112,6 +117,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   userName = 'Aydi Ala';
   userRole = 'Administrateur';
   userEmail = 'aydi.ala@example.com';
+  userCompany = 'Analytix Studio';
+  userLocation = 'Remote';
+  userBio = 'Pilotage produit, reporting et expérience data pour les équipes modernes.';
+  userTimezone = 'Europe/Paris';
   defaultPeriod = '30d';
   refreshInterval = 4;
   enableSound = true;
@@ -146,14 +155,38 @@ export class DashboardComponent implements OnInit, OnDestroy {
   toastMessage = '';
   showToast = false;
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const requestedTab = params.get('tab');
+      if (requestedTab) {
+        this.activeTab = requestedTab;
+      }
+    });
+
     const currentUser = this.authService.currentUser;
     if (currentUser) {
-      this.userName = currentUser.name;
-      this.userRole = currentUser.role;
-      this.userEmail = currentUser.email;
+      const {
+        name,
+        role,
+        email,
+        company,
+        location,
+        bio,
+        timezone
+      } = currentUser;
+
+      this.userName = name;
+      this.userRole = role;
+      this.userEmail = email;
+      this.userCompany = company ?? this.userCompany;
+      this.userLocation = location ?? this.userLocation;
+      this.userBio = bio ?? this.userBio;
+      this.userTimezone = timezone ?? this.userTimezone;
     }
 
     this.initializeData();
@@ -179,7 +212,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.activeTab = tabName;
     this.addLog(`Navigation vers l'onglet : ${tabName.toUpperCase()}`);
     this.showNotification(`Onglet : ${tabName.toUpperCase()}`);
-    
+
     if (tabName === 'analytics') {
       setTimeout(() => {
         this.updateAnalyticsChartData();
@@ -219,15 +252,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      
+
       osc.type = 'sine';
       osc.frequency.setValueAtTime(880, ctx.currentTime);
       osc.connect(gain);
-      
+
       gain.connect(ctx.destination);
       gain.gain.setValueAtTime(0.04, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.15);
-      
+
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.15);
     } catch (e) {
@@ -275,7 +308,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
 
       pdf.save(`rapport-dashboard-${this.dateFilter}-${new Date().toISOString().slice(0,10)}.pdf`);
-      
+
       if (actions) actions.style.display = '';
       if (sidebar) sidebar.style.display = '';
       if (mainContent) mainContent.style.padding = originalPadding;
@@ -324,10 +357,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (this.generationProgress >= 100) {
         this.generationProgress = 100;
         clearInterval(interval);
-        
+
         setTimeout(() => {
           this.isGeneratingReport = false;
-          
+
           const typeLabel = this.getReportTypeName(this.reportType);
           const newRep = {
             id: 'REP-' + Math.floor(100 + Math.random() * 900),
@@ -372,16 +405,52 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   // --- Settings specific actions ---
-  saveProfile(): void {
+  saveProfile(profile?: ProfileUpdate): void {
+    if (profile) {
+      this.userName = profile.name;
+      this.userEmail = profile.email;
+      this.userRole = profile.role;
+      this.userCompany = profile.company;
+      this.userLocation = profile.location;
+      this.userBio = profile.bio;
+      this.userTimezone = profile.timezone;
+
+      this.authService.updateProfile(profile);
+    }
+
     this.addLog(`Mise à jour du profil utilisateur: ${this.userName} (${this.userEmail})`);
     this.showNotification('Profil utilisateur sauvegardé !');
     this.playNotificationSound();
   }
 
+  runQuickAction(action: QuickActionId): void {
+    switch (action) {
+      case 'new-report':
+        this.setActiveTab('reports');
+        this.showNotification('Ouverture du générateur de rapports');
+        break;
+      case 'add-transaction':
+        this.setActiveTab('dashboard');
+        this.showNotification('Module de transactions prêt à l’emploi');
+        break;
+      case 'invite-member':
+        this.setActiveTab('profile');
+        this.showNotification('Invite membre: ajustez le profil ou les accès');
+        break;
+      case 'export-backup':
+        this.exportBackup();
+        break;
+      case 'open-settings':
+        this.setActiveTab('settings');
+        this.showNotification('Ouverture des paramètres');
+        break;
+    }
+  }
+
   testApiConnection(provider: 'stripe' | 'google'): void {
     this.apiTesting[provider] = true;
     this.addLog(`Test de connexion vers le fournisseur API: ${provider.toUpperCase()}...`);
-    
+
     setTimeout(() => {
       this.apiTesting[provider] = false;
       this.apiStatus[provider] = 'connected';
@@ -412,7 +481,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       apiKeys: this.apiKeys,
       timestamp: new Date().toISOString()
     };
-    
+
     const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -442,7 +511,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const label = this.getAnalyticsChartLabel();
     let borderC = '#10b981';
     let bgC = 'rgba(16, 185, 129, 0.08)';
-    
+
     if (this.activeAnalyticsMetric === 'conversions') {
       borderC = '#6366f1';
       bgC = 'rgba(99, 102, 241, 0.08)';
@@ -473,7 +542,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   // --- Data Initialization ---
   private initializeData(): void {
     const rangeDays = this.getDaysCount();
-    
+
     this.kpis = [
       {
         title: 'Revenus Totaux',
@@ -527,7 +596,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.kpis.forEach(kpi => {
         const percentChange = (Math.random() - 0.45) * 2;
         let numericVal = parseFloat(kpi.value.replace(/[^0-9.,]/g, '').replace(',', '.'));
-        
+
         if (kpi.iconName === 'currency-dollar') {
           numericVal += numericVal * (percentChange / 100);
           kpi.value = this.formatCurrency(numericVal);
@@ -895,13 +964,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const dataCopy = [...this.revenueChartData.datasets[0].data];
       const change = (Math.random() - 0.45) * 50;
       dataCopy[dataCopy.length - 1] = Math.max(100, (dataCopy[dataCopy.length - 1] as number) + change);
-      
+
       this.revenueChartData = {
         ...this.revenueChartData,
         datasets: [
           { ...this.revenueChartData.datasets[0], data: dataCopy },
-          { 
-            ...this.revenueChartData.datasets[1], 
+          {
+            ...this.revenueChartData.datasets[1],
             data: dataCopy.map((val, idx) => (this.revenueChartData.datasets[1].data![idx] as number) + (Math.random() - 0.5) * 20)
           }
         ]
@@ -996,11 +1065,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   private generateMockTransactions(days: number): Transaction[] {
     const categories = ['Logiciels', 'Consulting', 'Matériel', 'Abonnements'];
     const customers = [
-      'Société Alpha', 'Solutions Bêta', 'Ecorp', 'Startup Hub', 'Global Tech', 
+      'Société Alpha', 'Solutions Bêta', 'Ecorp', 'Startup Hub', 'Global Tech',
       'Aydi Ala', 'Pierre Dupont', 'Julie Dubois', 'Marc Morel', 'Alice Martin'
     ];
     const statusOptions: Transaction['status'][] = ['Completed', 'Pending', 'Cancelled'];
-    
+
     const count = Math.min(35, days * 3 + 5);
     const list: Transaction[] = [];
 
@@ -1035,7 +1104,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   getAnalyticsChartDataPoints(): number[] {
     const range = this.getDaysCount();
     let baseData: number[] = [];
-    
+
     if (this.activeAnalyticsMetric === 'sessions') {
       if (range === 1) baseData = [320, 480, 520, 610, 890, 1200, 950];
       else if (range === 7) baseData = [4500, 5200, 4900, 6100, 5800, 7200, 8500];
@@ -1047,10 +1116,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
       else if (range === 30) baseData = [3.1, 3.4, 3.2, 3.8];
       else baseData = [3.0, 3.3, 3.8];
     } else if (this.activeAnalyticsMetric === 'bounce') {
-      if (range === 1) baseData = [48, 46, 45, 43, 40, 38, 41];
-      else if (range === 7) baseData = [45, 43, 44, 41, 40, 38, 36];
-      else if (range === 30) baseData = [45, 42, 43, 38];
-      else baseData = [46, 43, 38];
+      if (range === 1) {
+        baseData = [48, 46, 45, 43, 40, 38, 41];
+      } else if (range === 7) {
+        baseData = [45, 43, 44, 41, 40, 38, 36];
+      } else if (range === 30) {
+        baseData = [45, 42, 43, 38];
+      } else {
+        baseData = [46, 43, 38];
+      }
     } else {
       if (range === 1) baseData = [58, 62, 60, 65, 68, 74, 71];
       else if (range === 7) baseData = [64, 68, 66, 72, 70, 78, 84];

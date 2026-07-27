@@ -1,32 +1,48 @@
 <div class="dashboard-container" [class.theme-dark]="isDarkMode" [class.theme-light]="!isDarkMode">
   <!-- Animated Sidebar Component -->
-  <app-sidebar 
-    [activeTab]="activeTab" 
-    [userName]="userName" 
-    [userRole]="userRole" 
+  <app-sidebar
+    [activeTab]="activeTab"
+    [userName]="userName"
+    [userRole]="userRole"
     (tabChange)="setActiveTab($event)">
   </app-sidebar>
 
   <!-- Main Section -->
   <main class="main-content" id="dashboard-content">
     <!-- Animated Toolbar Header Component -->
-    <app-header 
-      [activeTab]="activeTab" 
-      [lastUpdated]="lastUpdated" 
-      [isLiveSync]="isLiveSync" 
-      [dateFilter]="dateFilter" 
-      [isDarkMode]="isDarkMode" 
-      (toggleLiveSync)="toggleLiveSync()" 
-      (dateFilterChange)="onFilterChange($event)" 
-      (toggleTheme)="toggleTheme()" 
+    <app-header
+      [activeTab]="activeTab"
+      [lastUpdated]="lastUpdated"
+      [isLiveSync]="isLiveSync"
+      [dateFilter]="dateFilter"
+      [isDarkMode]="isDarkMode"
+      (toggleLiveSync)="toggleLiveSync()"
+      (dateFilterChange)="onFilterChange($event)"
+      (toggleTheme)="toggleTheme()"
       (exportPdf)="exportPDF()">
     </app-header>
 
     <!-- Tab View Container with Angular Tab Transition Animation -->
     <div class="content-body" [@fadeScaleTab]="activeTab">
-      
+
+      <!-- PROFILE TAB -->
+      <ng-container *ngIf="activeTab === 'profile'">
+        <app-profile-editor
+          [userName]="userName"
+          [userEmail]="userEmail"
+          [userRole]="userRole"
+          [userCompany]="userCompany"
+          [userLocation]="userLocation"
+          [userBio]="userBio"
+          [userTimezone]="userTimezone"
+          (saveProfile)="saveProfile($event)"
+          (cancelEdit)="setActiveTab('dashboard')">
+        </app-profile-editor>
+      </ng-container>
+
       <!-- OVERVIEW TAB -->
       <ng-container *ngIf="activeTab === 'dashboard'">
+        <app-quick-actions (actionSelected)="runQuickAction($event)"></app-quick-actions>
         <app-kpi-grid [kpis]="kpis"></app-kpi-grid>
 
         <section class="charts-grid">
