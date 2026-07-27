@@ -1,0 +1,52 @@
+<section class="module-shell">
+  <div class="glass-card module-hero">
+    <div>
+      <p class="eyebrow">Catalogue</p>
+      <h2>Gestion des produits</h2>
+      <p class="subtitle">Surveillez les références, le stock et la valeur d'inventaire.</p>
+    </div>
+
+    <div class="metric-chip">
+      <span>Valeur inventaire</span>
+      <strong>{{ totalInventoryValue() | currency:'EUR':'symbol':'1.0-0' }}</strong>
+    </div>
+  </div>
+
+  <div class="glass-card toolbar-card">
+    <input [(ngModel)]="searchText" type="text" placeholder="Rechercher un produit, SKU, catégorie" />
+    <select [(ngModel)]="selectedCategory">
+      <option *ngFor="let category of categories" [value]="category">
+        {{ category === 'all' ? 'Toutes les catégories' : category }}
+      </option>
+    </select>
+  </div>
+
+  <div class="glass-card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>SKU</th>
+          <th>Catégorie</th>
+          <th>Prix</th>
+          <th>Stock</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of filteredProducts">
+          <td>{{ product.name }}</td>
+          <td>{{ product.sku }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.price | currency:'EUR':'symbol':'1.0-0' }}</td>
+          <td>{{ product.stock }}</td>
+          <td><span class="status-pill" [attr.data-status]="product.status">{{ product.status }}</span></td>
+          <td>
+            <button type="button" class="secondary-btn" (click)="markAsLowStock(product)">Marquer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
