@@ -22,7 +22,7 @@ import { AuthService } from '../../services/auth.service';
 export class SidebarComponent {
   @Input() activeTab: string = 'dashboard';
   @Input() userName: string = 'Aydi Ala';
-  @Input() userRole: string = 'Administrateur';
+  @Input() userRole: 'Administrateur' | 'Client' = 'Administrateur';
 
   @Output() tabChange = new EventEmitter<string>();
 
@@ -33,6 +33,10 @@ export class SidebarComponent {
 
   selectTab(tab: string): void {
     this.tabChange.emit(tab);
+  }
+
+  get isAdmin(): boolean {
+    return this.userRole === 'Administrateur';
   }
 
   logout(): void {
