@@ -16,6 +16,11 @@ import { SettingsViewComponent } from '../settings-view/settings-view.component'
 import { ToastNotificationComponent } from '../toast-notification/toast-notification.component';
 import { ProfileEditorComponent, ProfileUpdate } from '../profile-editor/profile-editor.component';
 import { QuickActionsComponent, QuickActionId } from '../quick-actions/quick-actions.component';
+import { ProductManagementComponent } from '../product-management/product-management.component';
+import { OrdersSalesComponent } from '../orders-sales/orders-sales.component';
+import { NotificationsFeedComponent } from '../notifications-feed/notifications-feed.component';
+import { TeamUsersComponent } from '../team-users/team-users.component';
+import { SupportTicketsComponent } from '../support-tickets/support-tickets.component';
 import { AuthService } from '../../services/auth.service';
 
 import jsPDF from 'jspdf';
@@ -37,6 +42,11 @@ import html2canvas from 'html2canvas';
     SettingsViewComponent,
     ProfileEditorComponent,
     QuickActionsComponent,
+    ProductManagementComponent,
+    OrdersSalesComponent,
+    NotificationsFeedComponent,
+    TeamUsersComponent,
+    SupportTicketsComponent,
     ToastNotificationComponent
   ],
   templateUrl: './dashboard.component.html',

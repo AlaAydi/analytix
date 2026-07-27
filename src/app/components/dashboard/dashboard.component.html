@@ -40,6 +40,31 @@
         </app-profile-editor>
       </ng-container>
 
+      <!-- PRODUCTS TAB -->
+      <ng-container *ngIf="activeTab === 'products'">
+        <app-product-management></app-product-management>
+      </ng-container>
+
+      <!-- ORDERS TAB -->
+      <ng-container *ngIf="activeTab === 'orders'">
+        <app-orders-sales></app-orders-sales>
+      </ng-container>
+
+      <!-- NOTIFICATIONS TAB -->
+      <ng-container *ngIf="activeTab === 'notifications'">
+        <app-notifications-feed></app-notifications-feed>
+      </ng-container>
+
+      <!-- USERS TAB -->
+      <ng-container *ngIf="activeTab === 'users'">
+        <app-team-users></app-team-users>
+      </ng-container>
+
+      <!-- SUPPORT TAB -->
+      <ng-container *ngIf="activeTab === 'support'">
+        <app-support-tickets></app-support-tickets>
+      </ng-container>
+
       <!-- OVERVIEW TAB -->
       <ng-container *ngIf="activeTab === 'dashboard'">
         <app-quick-actions (actionSelected)="runQuickAction($event)"></app-quick-actions>
