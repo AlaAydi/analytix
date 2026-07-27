@@ -1,0 +1,78 @@
+<section class="profile-layout">
+  <div class="glass-card profile-hero-card">
+    <div class="hero-top">
+      <div class="avatar-block">{{ avatarInitials() }}</div>
+      <div>
+        <p class="eyebrow">Compte actif</p>
+        <h2>Edition du profil</h2>
+        <p class="subtitle">Mettez à jour les informations affichées dans tout le tableau de bord.</p>
+      </div>
+    </div>
+
+    <div class="profile-metrics">
+      <div>
+        <span>Rôle</span>
+        <strong>{{ userRole }}</strong>
+      </div>
+      <div>
+        <span>Localisation</span>
+        <strong>{{ userLocation }}</strong>
+      </div>
+      <div>
+        <span>Fuseau</span>
+        <strong>{{ userTimezone }}</strong>
+      </div>
+    </div>
+
+    <p class="bio-preview">{{ userBio }}</p>
+  </div>
+
+  <div class="glass-card profile-form-card">
+    <div class="card-header">
+      <h3 class="card-title">Informations du profil</h3>
+      <p class="card-subtitle">Profil, entreprise, bio et zone horaire.</p>
+    </div>
+
+    <div class="profile-form-grid">
+      <label>
+        <span>Nom complet</span>
+        <input [(ngModel)]="userName" type="text" />
+      </label>
+
+      <label>
+        <span>Email</span>
+        <input [(ngModel)]="userEmail" type="email" />
+      </label>
+
+      <label>
+        <span>Rôle</span>
+        <input [(ngModel)]="userRole" type="text" />
+      </label>
+
+      <label>
+        <span>Entreprise</span>
+        <input [(ngModel)]="userCompany" type="text" />
+      </label>
+
+      <label>
+        <span>Localisation</span>
+        <input [(ngModel)]="userLocation" type="text" />
+      </label>
+
+      <label>
+        <span>Fuseau horaire</span>
+        <input [(ngModel)]="userTimezone" type="text" />
+      </label>
+
+      <label class="full-width">
+        <span>Bio</span>
+        <textarea [(ngModel)]="userBio" rows="4"></textarea>
+      </label>
+    </div>
+
+    <div class="actions-row">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      <button type="button" class="btn btn-primary" (click)="onSave()">Sauvegarder</button>
+    </div>
+  </div>
+</section>
