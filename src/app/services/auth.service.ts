@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 export interface AuthUser {
   name: string;
   email: string;
-  role: string;
+  role: 'Administrateur' | 'Client';
   company?: string;
   location?: string;
   bio?: string;
@@ -14,7 +14,7 @@ interface StoredCredentials {
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: 'Administrateur' | 'Client';
   company?: string;
   location?: string;
   bio?: string;
@@ -52,25 +52,37 @@ export class AuthService {
     return this.currentUser !== null;
   }
 
-  register(name: string, email: string, password: string): AuthUser {
+  register(
+    name: string,
+    email: string,
+    password: string,
+    role: 'Administrateur' | 'Client'
+  ): AuthUser {
     const normalizedEmail = email.trim().toLowerCase();
     const user: StoredCredentials = {
       name: name.trim(),
       email: normalizedEmail,
       password,
-      role: 'Utilisateur'
+      role
     };
 
     localStorage.setItem(this.userKey, JSON.stringify(user));
     return this.setSession(user);
   }
 
-  login(email: string, password: string): AuthUser | null {
+  login(
+    email: string,
+    password: string,
+    role?: 'Administrateur' | 'Client'
+  ): AuthUser | null {
     const normalizedEmail = email.trim().toLowerCase();
     const storedUser = this.getStoredUser();
 
     const candidates = [storedUser, this.demoAccount].filter(Boolean) as StoredCredentials[];
-    const match = candidates.find((user) => user.email === normalizedEmail && user.password === password);
+    const match = candidates.find((user) => {
+      const roleMatches = !role || user.role === role;
+      return user.email === normalizedEmail && user.password === password && roleMatches;
+    });
 
     if (!match) {
       return null;
@@ -94,7 +106,7 @@ export class AuthService {
       ...profile,
       name: profile.name?.trim() || sessionUser.name,
       email: profile.email?.trim().toLowerCase() || sessionUser.email,
-      role: profile.role?.trim() || sessionUser.role
+      role: profile.role || sessionUser.role
     };
 
     localStorage.setItem(this.sessionKey, JSON.stringify(updatedUser));
