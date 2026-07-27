@@ -37,6 +37,52 @@
       <span>Rapports</span>
     </button>
 
+    <button class="nav-item" [class.active]="activeTab === 'products'" (click)="selectTab('products')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <path d="M3.27 6.96L12 12l8.73-5.04" />
+        <path d="M12 22V12" />
+      </svg>
+      <span>Produits</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeTab === 'orders'" (click)="selectTab('orders')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 6h15l-1.5 9h-13z" />
+        <path d="M6 6l-2-3H2" />
+        <circle cx="9" cy="20" r="1" />
+        <circle cx="18" cy="20" r="1" />
+      </svg>
+      <span>Commandes</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeTab === 'notifications'" (click)="selectTab('notifications')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 17h5l-1.4-1.4a2 2 0 0 1-.6-1.4V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5" />
+        <path d="M9 17a3 3 0 0 0 6 0" />
+      </svg>
+      <span>Notifications</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeTab === 'users'" (click)="selectTab('users')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="11" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+      <span>Utilisateurs</span>
+    </button>
+
+    <button class="nav-item" [class.active]="activeTab === 'support'" (click)="selectTab('support')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+        <path d="M9 10h6" />
+        <path d="M9 14h4" />
+      </svg>
+      <span>Support</span>
+    </button>
+
     <button class="nav-item" [class.active]="activeTab === 'profile'" (click)="selectTab('profile')">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
