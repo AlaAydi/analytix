@@ -1,0 +1,22 @@
+<section class="quick-actions-card glass-card">
+  <div class="card-header">
+    <div>
+      <h3 class="card-title">Actions rapides</h3>
+      <p class="card-subtitle">Les raccourcis utiles pour chaque projet.</p>
+    </div>
+  </div>
+
+  <div class="actions-grid">
+    <button
+      *ngFor="let action of actions"
+      type="button"
+      class="action-tile"
+      (click)="selectAction(action.id)">
+      <div class="action-icon" [attr.data-icon]="action.icon"></div>
+      <div class="action-copy">
+        <strong>{{ action.title }}</strong>
+        <span>{{ action.description }}</span>
+      </div>
+    </button>
+  </div>
+</section>
