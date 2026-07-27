@@ -3,6 +3,11 @@
     <h1 class="page-title" *ngIf="activeTab === 'dashboard'">Tableau de bord</h1>
     <h1 class="page-title" *ngIf="activeTab === 'analytics'">Analyses de l'audience</h1>
     <h1 class="page-title" *ngIf="activeTab === 'reports'">Centre de rapports</h1>
+    <h1 class="page-title" *ngIf="activeTab === 'products'">Gestion des produits</h1>
+    <h1 class="page-title" *ngIf="activeTab === 'orders'">Commandes et ventes</h1>
+    <h1 class="page-title" *ngIf="activeTab === 'notifications'">Notifications et activité</h1>
+    <h1 class="page-title" *ngIf="activeTab === 'users'">Utilisateurs et rôles</h1>
+    <h1 class="page-title" *ngIf="activeTab === 'support'">Support et tickets</h1>
     <h1 class="page-title" *ngIf="activeTab === 'profile'">Profil utilisateur</h1>
     <h1 class="page-title" *ngIf="activeTab === 'settings'">Configuration du système</h1>
     <p class="page-subtitle">Dernière mise à jour : {{ lastUpdated | date:'HH:mm:ss' }}</p>
