@@ -16,6 +16,7 @@ export class RegisterComponent {
   email = '';
   password = '';
   confirmPassword = '';
+  role: 'Administrateur' | 'Client' = 'Client';
   acceptTerms = false;
   isSubmitting = false;
   errorMessage = '';
@@ -41,7 +42,7 @@ export class RegisterComponent {
     this.isSubmitting = true;
 
     setTimeout(() => {
-      this.authService.register(this.name, this.email, this.password);
+      this.authService.register(this.name, this.email, this.password, this.role);
       this.router.navigate(['/dashboard']);
     }, 450);
   }

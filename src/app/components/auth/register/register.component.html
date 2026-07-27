@@ -66,6 +66,22 @@
           required>
       </label>
 
+      <div class="role-picker">
+        <span class="role-label">Créer le compte pour</span>
+        <div class="role-options">
+          <label class="role-card" [class.active]="role === 'Client'">
+            <input type="radio" name="role" [(ngModel)]="role" value="Client">
+            <strong>Client</strong>
+            <span>Accès simplifié au dashboard</span>
+          </label>
+          <label class="role-card" [class.active]="role === 'Administrateur'">
+            <input type="radio" name="role" [(ngModel)]="role" value="Administrateur">
+            <strong>Administrateur</strong>
+            <span>Contrôle complet et modules avancés</span>
+          </label>
+        </div>
+      </div>
+
       <label class="checkbox">
         <input type="checkbox" name="acceptTerms" [(ngModel)]="acceptTerms">
         <span>J'accepte les conditions d'utilisation</span>
