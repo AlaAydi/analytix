@@ -1,0 +1,36 @@
+<section class="module-shell">
+  <div class="glass-card module-hero">
+    <div>
+      <p class="eyebrow">Assistance</p>
+      <h2>Support chat / tickets</h2>
+      <p class="subtitle">Suivi des demandes, priorités et statut de résolution.</p>
+    </div>
+
+    <input [(ngModel)]="searchText" type="text" placeholder="Rechercher un ticket" />
+  </div>
+
+  <div class="glass-card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Ticket</th>
+          <th>Sujet</th>
+          <th>Client</th>
+          <th>Priorité</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of filteredTickets">
+          <td>{{ ticket.id }}</td>
+          <td>{{ ticket.subject }}</td>
+          <td>{{ ticket.customer }}</td>
+          <td>{{ ticket.priority }}</td>
+          <td><span class="status-pill" [attr.data-status]="ticket.status">{{ ticket.status }}</span></td>
+          <td><button type="button" class="secondary-btn" (click)="cycleStatus(ticket)">Changer</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
