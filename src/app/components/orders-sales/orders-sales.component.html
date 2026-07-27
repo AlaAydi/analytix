@@ -1,0 +1,40 @@
+<section class="module-shell">
+  <div class="glass-card module-hero">
+    <div>
+      <p class="eyebrow">Ventes</p>
+      <h2>Page commandes / ventes</h2>
+      <p class="subtitle">Vue opérationnelle des paiements, remboursements et paniers en attente.</p>
+    </div>
+
+    <div class="summary-grid">
+      <div><span>Payées</span><strong>{{ statusCount('Paid') }}</strong></div>
+      <div><span>En attente</span><strong>{{ statusCount('Pending') }}</strong></div>
+      <div><span>Remboursées</span><strong>{{ statusCount('Refunded') }}</strong></div>
+    </div>
+  </div>
+
+  <div class="glass-card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Commande</th>
+          <th>Client</th>
+          <th>Canal</th>
+          <th>Montant</th>
+          <th>Statut</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of orders">
+          <td>{{ order.orderId }}</td>
+          <td>{{ order.customer }}</td>
+          <td>{{ order.channel }}</td>
+          <td>{{ order.amount | currency:'EUR':'symbol':'1.0-0' }}</td>
+          <td><span class="status-pill" [attr.data-status]="order.status">{{ order.status }}</span></td>
+          <td>{{ order.date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
