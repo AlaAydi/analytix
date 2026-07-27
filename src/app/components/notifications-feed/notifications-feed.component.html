@@ -1,0 +1,24 @@
+<section class="module-shell">
+  <div class="glass-card module-hero">
+    <div>
+      <p class="eyebrow">Activity feed</p>
+      <h2>Notifications et activité</h2>
+      <p class="subtitle">Centralisez les alertes importantes du produit et de l'équipe.</p>
+    </div>
+
+    <button type="button" class="secondary-btn" (click)="markAllRead()">Tout marquer comme lu</button>
+  </div>
+
+  <div class="feed-grid">
+    <article *ngFor="let notification of notifications" class="glass-card feed-item" [attr.data-read]="notification.read">
+      <div class="feed-meta">
+        <span class="feed-dot" [attr.data-type]="notification.type"></span>
+        <div>
+          <h3>{{ notification.title }}</h3>
+          <p>{{ notification.description }}</p>
+        </div>
+      </div>
+      <span class="feed-time">{{ notification.time }}</span>
+    </article>
+  </div>
+</section>
